@@ -17,16 +17,6 @@ import SwiftSyntaxBuilder
 import SwiftSyntaxMacroExpansion
 import SwiftSyntaxMacros
 
-public struct InitMacro: PeerMacro {
-    public static func expansion(
-        of node: SwiftSyntax.AttributeSyntax,
-        providingPeersOf declaration: some SwiftSyntax.DeclSyntaxProtocol,
-        in context: some SwiftSyntaxMacros.MacroExpansionContext
-    ) throws -> [SwiftSyntax.DeclSyntax] {
-        return []
-    }
-}
-
 public enum CaseDetectionMacro: MemberMacro {
     public static func expansion<D, C>(
         of node: AttributeSyntax,
