@@ -5,5 +5,6 @@ import SwiftSyntaxMacros
 struct MacrosPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
         StringifyMacro.self,
+        CaseDetectionMacro.self,
     ]
 }
