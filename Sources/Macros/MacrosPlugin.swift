@@ -3,8 +3,24 @@ import SwiftSyntaxMacros
 
 @main
 struct MacrosPlugin: CompilerPlugin {
+    init() {}
+
+    static var expressionMacros: [Macro.Type] {
+        [
+            StringifyMacro.self,
+        ]
+    }
+
+    static var memberMacros: [Macro.Type] {
+        [
+            CaseDetectionMacro.self,
+            LoggingMacro.self,
+            LazyLoggingMacro.self,
+        ]
+    }
+
     let providingMacros: [Macro.Type] = [
-        StringifyMacro.self,
-        CaseDetectionMacro.self,
-    ]
+        expressionMacros,
+        memberMacros,
+    ].flatMap { $0 }
 }
