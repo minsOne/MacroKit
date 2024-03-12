@@ -32,7 +32,7 @@ print("cat is \(cat.isCat)")
 @Logging
 class LogModel {
     func log() {
-        logger.debug("Msg")
+        #log(level: .debug, "log messsage")
     }
 }
 

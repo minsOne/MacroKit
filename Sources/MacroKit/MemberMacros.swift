@@ -18,9 +18,9 @@ public macro Logging() = #externalMacro(module: "Macros", type: "LoggingMacro")
 // MARK: - Helper
 
 public enum LoggingMacroHelper {
-    public static func generateLogger(_ fileID: String = #fileID, category: String) -> Logger {
+    public static func generateOSLog(_ fileID: String = #fileID, category: String) -> OSLog {
         let subsystem = fileID.components(separatedBy: "/").first.map { "kr.minsone.\($0)" }
-        return subsystem.map { Logger(subsystem: $0, category: category) }
-            ?? Logger()
+        return subsystem.flatMap { OSLog(subsystem: $0, category: category) }
+            ?? .default
     }
 }
