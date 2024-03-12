@@ -4,27 +4,26 @@ import SwiftSyntaxMacrosTestSupport
 import XCTest
 
 final class LoggingTests: XCTestCase {
-    func testLazyLoggingMacroExpansion() throws {
+    func testLoggingMacroExpansion1() throws {
         assertMacroExpansion(
             """
-            @LazyLogging
+            @Logging
             class TestingObject {
             }
             """,
             expandedSource: """
             class TestingObject {
 
-                lazy private var logger: Logger = {
-                    return Logger(subsystem: Bundle.main.bundleIdentifier ?? "Default Subsystem",
-                                  category: String(describing: Self.self))
+                lazy var logger: Logger = {
+                    LoggingMacroHelper.generateLogger(category: String(describing: Self.self))
                 }()
             }
             """,
-            macros: ["LazyLogging": LazyLoggingMacro.self]
+            macros: ["Logging": LoggingMacro.self]
         )
     }
 
-    func testLoggingMacroExpansion() throws {
+    func testLoggingMacroExpansion2() throws {
         assertMacroExpansion(
             """
             @Logging
@@ -42,8 +41,9 @@ final class LoggingTests: XCTestCase {
                     Text("Hello, world!")
                 }
 
-                private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "Default Subsystem",
-                                                    category: String(describing: Self.self))
+                lazy var logger: Logger = {
+                    LoggingMacroHelper.generateLogger(category: String(describing: Self.self))
+                }()
             }
             """,
             macros: ["Logging": LoggingMacro.self]

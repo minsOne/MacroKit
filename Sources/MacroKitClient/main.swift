@@ -28,3 +28,12 @@ print("dog is \(dog.isDog)")
 
 let cat = Animal2.cat(curious: true)
 print("cat is \(cat.isCat)")
+
+@Logging
+class LogModel {
+    func log() {
+        logger.debug("Msg")
+    }
+}
+
+LogModel().log()

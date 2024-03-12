@@ -15,7 +15,6 @@ struct MacrosPlugin: CompilerPlugin {
         [
             CaseDetectionMacro.self,
             LoggingMacro.self,
-            LazyLoggingMacro.self,
         ]
     }
 

@@ -6,28 +6,38 @@
 
 import SwiftSyntax
 import SwiftSyntaxBuilder
+import SwiftSyntaxMacroExpansion
 import SwiftSyntaxMacros
 
 public struct LoggingMacro: MemberMacro {
-    
     public enum MacroError: Error {
         case incorrectType
     }
-    
+
     public static func expansion(
         of node: AttributeSyntax,
         providingMembersOf declaration: some DeclGroupSyntax,
-        in context: some MacroExpansionContext) throws -> [DeclSyntax] {
-            guard declaration.is(ClassDeclSyntax.self) ||
-                    declaration.is(StructDeclSyntax.self) ||
-                    declaration.is(ActorDeclSyntax.self) else { throw MacroError.incorrectType }
-            
-            return [
-                DeclSyntax(
-"""
-private let logger: Logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "Default Subsystem",
-                                    category: String(describing: Self.self))
-""")
-            ]
+        in context: some MacroExpansionContext
+    ) throws -> [DeclSyntax] {
+        let allowTypes: [SyntaxKind] = [
+            .classDecl,
+            .structDecl,
+            .actorDecl,
+        ]
+
+        guard allowTypes.contains(declaration.kind)
+        else {
+            let msg = "@Logger는 Class, Struct, Actor에만 사용 가능합니다."
+            throw MacroExpansionErrorMessage(msg)
         }
+
+        return [
+            DeclSyntax(
+                """
+                lazy var logger: Logger = {
+                    LoggingMacroHelper.generateLogger(category: String(describing: Self.self))
+                }()
+                """),
+        ]
+    }
 }

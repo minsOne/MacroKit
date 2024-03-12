@@ -15,5 +15,12 @@ public macro CaseDetection(_ accessLevel: CaseDetectionAccessLevelConfig? = nil)
 @attached(member, names: named(logger))
 public macro Logging() = #externalMacro(module: "Macros", type: "LoggingMacro")
 
-@attached(member, names: named(logger))
-public macro LazyLogging() = #externalMacro(module: "Macros", type: "LazyLoggingMacro")
+// MARK: - Helper
+
+public enum LoggingMacroHelper {
+    public static func generateLogger(_ fileID: String = #fileID, category: String) -> Logger {
+        let subsystem = fileID.components(separatedBy: "/").first.map { "kr.minsone.\($0)" }
+        return subsystem.map { Logger(subsystem: $0, category: category) }
+            ?? Logger()
+    }
+}
