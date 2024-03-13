@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.9.2 (swiftlang-5.9.2.2.56 clang-1500.1.0.2.5)
+// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.10.5 clang-1500.3.7.4)
 // swift-module-flags: -target arm64-apple-macosx10.15 -enable-objc-interop -enable-library-evolution -swift-version 5 -Onone -module-name SwiftSyntaxMacros
 import Swift
 import SwiftDiagnostics
@@ -97,6 +97,11 @@ public protocol MemberAttributeMacro : SwiftSyntaxMacros.AttachedMacro {
 }
 public protocol MemberMacro : SwiftSyntaxMacros.AttachedMacro {
   static func expansion(of node: SwiftSyntax.AttributeSyntax, providingMembersOf declaration: some DeclGroupSyntax, in context: some MacroExpansionContext) throws -> [SwiftSyntax.DeclSyntax]
+  static func expansion(of node: SwiftSyntax.AttributeSyntax, providingMembersOf declaration: some DeclGroupSyntax, conformingTo protocols: [SwiftSyntax.TypeSyntax], in context: some MacroExpansionContext) throws -> [SwiftSyntax.DeclSyntax]
+}
+extension SwiftSyntaxMacros.MemberMacro {
+  public static func expansion(of node: SwiftSyntax.AttributeSyntax, providingMembersOf declaration: some DeclGroupSyntax, in context: some MacroExpansionContext) throws -> [SwiftSyntax.DeclSyntax]
+  public static func expansion(of node: SwiftSyntax.AttributeSyntax, providingMembersOf declaration: some DeclGroupSyntax, conformingTo protocols: [SwiftSyntax.TypeSyntax], in context: some MacroExpansionContext) throws -> [SwiftSyntax.DeclSyntax]
 }
 public protocol PeerMacro : SwiftSyntaxMacros.AttachedMacro {
   static func expansion(of node: SwiftSyntax.AttributeSyntax, providingPeersOf declaration: some DeclSyntaxProtocol, in context: some MacroExpansionContext) throws -> [SwiftSyntax.DeclSyntax]

@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.9.2 (swiftlang-5.9.2.2.56 clang-1500.1.0.2.5)
+// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.10.5 clang-1500.3.7.4)
 // swift-module-flags: -target arm64-apple-macosx10.15 -enable-objc-interop -enable-library-evolution -swift-version 5 -Onone -module-name _SwiftSyntaxTestSupport
 import Foundation
 import Swift
@@ -37,12 +37,6 @@ public enum SubtreeError : Swift.Error, Swift.CustomStringConvertible {
   case invalidMarker(name: Swift.String)
   case invalidSubtree(tree: SwiftSyntax.Syntax, afterUTF8Offset: Swift.Int, type: Swift.String)
   public var description: Swift.String {
-    get
-  }
-}
-extension SwiftSyntax.SyntaxCollection {
-  public func child(at index: Swift.Int) -> Self.Element?
-  public subscript(index: Swift.Int) -> Self.Element {
     get
   }
 }

@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.9.2 (swiftlang-5.9.2.2.56 clang-1500.1.0.2.5)
+// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.10.5 clang-1500.3.7.4)
 // swift-module-flags: -target arm64-apple-macosx10.15 -enable-objc-interop -enable-library-evolution -swift-version 5 -Onone -module-name SwiftParserDiagnostics
 import Swift
 import SwiftBasicFormat
@@ -211,13 +211,17 @@ extension SwiftParserDiagnostics.ParserError {
   }
 }
 public protocol ParserNote : SwiftDiagnostics.NoteMessage {
-  var fixItID: SwiftDiagnostics.MessageID { get }
+  var noteID: SwiftDiagnostics.MessageID { get }
 }
 extension SwiftParserDiagnostics.ParserNote {
+  @available(*, deprecated, renamed: "noteID", message: "Use noteID instead.")
   public static var fixItID: SwiftDiagnostics.MessageID {
     get
   }
-  public var fixItID: SwiftDiagnostics.MessageID {
+  public static var noteID: SwiftDiagnostics.MessageID {
+    get
+  }
+  public var noteID: SwiftDiagnostics.MessageID {
     get
   }
 }
@@ -402,6 +406,9 @@ extension SwiftDiagnostics.DiagnosticMessage where Self == SwiftParserDiagnostic
     get
   }
   public static var tryMustBePlacedOnThrownExpr: SwiftParserDiagnostics.StaticParserError {
+    get
+  }
+  public static var tryMustBePlacedOnThenExpr: SwiftParserDiagnostics.StaticParserError {
     get
   }
   public static var tryOnInitialValueExpression: SwiftParserDiagnostics.StaticParserError {
@@ -595,7 +602,7 @@ public struct EffectSpecifierDeclaredHere : SwiftParserDiagnostics.ParserNote {
 }
 public struct StaticParserNote : SwiftDiagnostics.NoteMessage {
   public let message: Swift.String
-  public var fixItID: SwiftDiagnostics.MessageID {
+  public var noteID: SwiftDiagnostics.MessageID {
     get
   }
 }
