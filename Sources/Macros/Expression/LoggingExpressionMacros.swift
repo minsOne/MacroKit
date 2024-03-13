@@ -46,15 +46,11 @@ public struct LoggingExpressionMacros: ExpressionMacro {
     private static func generateExpr(oslogType: String, msg: String) -> String {
         """
         {
-          #if os(iOS)
-            if #available(iOS 14.0, *) {
-              Logger(logger).log(level: .\(oslogType), "\(msg)")
-            } else {
-              \(debug(oslogType: oslogType, msg: msg))
-            }
-          #else
+          if #available(iOS 14.0, macOS 11.0, watchOS 7.0, tvOS 14.0, *) {
+            Logger(logger).log(level: .\(oslogType), "\(msg)")
+          } else {
             \(debug(oslogType: oslogType, msg: msg))
-          #endif
+          }
         }()
         """
     }
