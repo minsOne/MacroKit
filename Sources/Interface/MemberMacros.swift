@@ -29,3 +29,15 @@ public enum LoggingMacroHelper {
             ?? .default
     }
 }
+
+// MARK: - Associated Values
+
+public enum AssociatedValuesAccessLevelConfig {
+    case `private`
+    case `fileprivate`
+    case `internal`
+    case `public`
+}
+
+@attached(member, names: arbitrary)
+public macro AssociatedValues(_ accessLevel: AssociatedValuesAccessLevelConfig? = nil) = #externalMacro(module: "Macros", type: "AssociatedValuesMacro")

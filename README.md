@@ -6,4 +6,4 @@
 * [gohanlon/swift-memberwise-init-macro](https://github.com/gohanlon/swift-memberwise-init-macro)
 * [IanKeen/MacroKit](https://github.com/IanKeen/MacroKit)
 * [JamesSedlacek/Logging](https://github.com/JamesSedlacek/Logging)
-
+* [bernndr/swift-macros](https://github.com/bernndr/swift-macros)

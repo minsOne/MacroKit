@@ -46,4 +46,16 @@ func runMemberMacrosPlayground() {
     }
 
     LogModel().log()
+
+    @AssociatedValues(.fileprivate)
+    enum SomeEnum {
+        case none
+        case labeledValue(a: String, b: String)
+        case optional(String?)
+        case value(Int)
+        case closure(() -> Void)
+    }
+
+    let someEnum = SomeEnum.labeledValue(a: "a", b: "b")
+    print(someEnum.labeledValue)
 }

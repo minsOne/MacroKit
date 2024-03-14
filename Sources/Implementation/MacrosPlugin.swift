@@ -14,6 +14,7 @@ struct MacrosPlugin: CompilerPlugin {
 
     static var memberMacros: [Macro.Type] {
         [
+            AssociatedValuesMacro.self,
             CaseDetectionMacro.self,
             LoggingMacro.self,
         ]
