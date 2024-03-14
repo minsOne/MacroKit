@@ -1,8 +1,8 @@
 // swift-tools-version: 5.10
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
-import PackageDescription
 import CompilerPluginSupport
+import PackageDescription
 
 let package = Package(
     name: "MacroKit",
@@ -26,15 +26,12 @@ let package = Package(
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         // Macro implementation that performs the source transformation of a macro.
-        .macro(
-            name: "Macros",
-            dependencies: [
-                .target(name: "SwiftSyntaxWrapper"),
-            ]
-        ),
+        .macro(name: "Macros",
+               dependencies: [.target(name: "SwiftSyntaxWrapper")],
+               path: "Sources/Implementation"),
 
         // Library that exposes a macro as part of its API, which is used in client programs.
-        .target(name: "MacroKit", dependencies: ["Macros"]),
+        .target(name: "MacroKit", dependencies: ["Macros"], path: "Sources/Interface"),
 
         // A client of the library, which is able to use the macro in its own code.
         .executableTarget(name: "MacroPlayground", dependencies: ["MacroKit"], path: "Sources/Playground"),
@@ -47,6 +44,6 @@ let package = Package(
                 .target(name: "SwiftSyntaxWrapper"),
             ]
         ),
-        .binaryTarget(name: "SwiftSyntaxWrapper", path: "XCFramework/SwiftSyntaxWrapper.xcframework")
+        .binaryTarget(name: "SwiftSyntaxWrapper", path: "XCFramework/SwiftSyntaxWrapper.xcframework"),
     ]
 )
