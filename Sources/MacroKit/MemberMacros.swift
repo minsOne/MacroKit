@@ -1,6 +1,8 @@
 import Foundation
 @_exported import OSLog
 
+// MARK: - Case Detection
+
 public enum CaseDetectionAccessLevelConfig {
     case `private`
     case `fileprivate`
@@ -12,15 +14,18 @@ public enum CaseDetectionAccessLevelConfig {
 @attached(member, names: named(init), arbitrary)
 public macro CaseDetection(_ accessLevel: CaseDetectionAccessLevelConfig? = nil) = #externalMacro(module: "Macros", type: "CaseDetectionMacro")
 
+// MARK: - Logging
+
 @attached(member, names: named(logger))
 public macro Logging() = #externalMacro(module: "Macros", type: "LoggingMacro")
 
-// MARK: - Helper
-
 public enum LoggingMacroHelper {
     public static func generateOSLog(_ fileID: String = #fileID, category: String) -> OSLog {
-        let subsystem = fileID.components(separatedBy: "/").first.map { "kr.minsone.\($0)" }
-        return subsystem.flatMap { OSLog(subsystem: $0, category: category) }
+        fileID
+            .components(separatedBy: "/")
+            .first
+            .map { "kr.minsone.\($0)" }
+            .flatMap { OSLog(subsystem: $0, category: category) }
             ?? .default
     }
 }

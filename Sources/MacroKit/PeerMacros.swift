@@ -14,3 +14,11 @@
 
 @attached(peer, names: overloaded)
 public macro AddAsync() = #externalMacro(module: "Macros", type: "AddAsyncMacro")
+
+// MARK: - Add Completion Handler
+
+/// Adds a "completionHandler" variant of an async function, which creates a new
+/// task , calls the original async function, and delivers its result to the completion
+/// handler.
+@attached(peer, names: overloaded)
+public macro AddCompletionHandler() = #externalMacro(module: "Macros", type: "AddCompletionHandlerMacro")

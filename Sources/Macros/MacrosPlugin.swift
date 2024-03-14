@@ -22,6 +22,7 @@ struct MacrosPlugin: CompilerPlugin {
     static var peerMacros: [Macro.Type] {
         [
             AddAsyncMacro.self,
+            AddCompletionHandlerMacro.self,
         ]
     }
 
