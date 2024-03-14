@@ -19,8 +19,15 @@ struct MacrosPlugin: CompilerPlugin {
         ]
     }
 
+    static var peerMacros: [Macro.Type] {
+        [
+            AddAsyncMacro.self,
+        ]
+    }
+
     let providingMacros: [Macro.Type] = [
         expressionMacros,
         memberMacros,
+        peerMacros,
     ].flatMap { $0 }
 }
