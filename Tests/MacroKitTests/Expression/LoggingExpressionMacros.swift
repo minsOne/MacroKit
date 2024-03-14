@@ -11,15 +11,11 @@ final class LoggingExpressionMacrosTests: XCTestCase {
             """#,
             expandedSource: #"""
             {
-              #if os(iOS)
-                if #available (iOS 14.0, *) {
-                  Logger(logger).log(level: .debug, "message")
-                } else {
-                  os_log(.debug, log: logger, "message")
-                }
-              #else
+              if #available (iOS 14.0, macOS 11.0, watchOS 7.0, tvOS 14.0, *) {
+                Logger(logger).log(level: .debug, "message")
+              } else {
                 os_log(.debug, log: logger, "message")
-              #endif
+              }
             }()
             """#,
             macros: ["log": LoggingExpressionMacros.self]

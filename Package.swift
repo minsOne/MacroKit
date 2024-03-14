@@ -14,13 +14,13 @@ let package = Package(
             targets: ["MacroKit"]
         ),
         .executable(
-            name: "MacroKitClient",
-            targets: ["MacroKitClient"]
+            name: "MacroPlayground",
+            targets: ["MacroPlayground"]
         ),
     ],
     dependencies: [
         // Depend on the Swift 5.9 release of SwiftSyntax
-        .package(url: "https://github.com/apple/swift-syntax.git", from: "509.0.0"),
+        .package(url: "https://github.com/apple/swift-syntax.git", from: "510.0.1"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -37,7 +37,7 @@ let package = Package(
         .target(name: "MacroKit", dependencies: ["Macros"]),
 
         // A client of the library, which is able to use the macro in its own code.
-        .executableTarget(name: "MacroKitClient", dependencies: ["MacroKit"]),
+        .executableTarget(name: "MacroPlayground", dependencies: ["MacroKit"], path: "Sources/Playground"),
 
         // A test target used to develop the macro implementation.
         .testTarget(

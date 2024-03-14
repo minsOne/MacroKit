@@ -32,8 +32,25 @@ print("cat is \(cat.isCat)")
 @Logging
 class LogModel {
     func log() {
+        Logger(logger).trace("log messsage")
+        os_log(.info, log: logger, "log messsage")
+        #log(level: .info, "log messsage")
         #log(level: .debug, "log messsage")
+        #log(level: .error, "log messsage")
     }
 }
 
 LogModel().log()
+
+struct MyStruct {
+    @AddAsync
+    func c(a: Int, for b: String, _ value: Double, completionBlock: @escaping (Result<String, Error>) -> Void) -> Void {
+        completionBlock(.success("a: \(a), b: \(b), value: \(value)"))
+    }
+    
+    @AddAsync
+    func d(a: Int, for b: String, _ value: Double, completionBlock: @escaping (Bool) -> Void) -> Void {
+        completionBlock(true)
+    }
+}
+
