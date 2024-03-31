@@ -23,64 +23,62 @@ public enum CaseDetectionMacro: MemberMacro {
         providingMembersOf decl: D,
         in context: C
     ) throws -> [SwiftSyntax.DeclSyntax]
-    where D: DeclGroupSyntax, C: MacroExpansionContext {
+        where D: DeclGroupSyntax, C: MacroExpansionContext {
         guard [SwiftSyntax.SyntaxKind.enumDecl].contains(decl.kind) else {
             throw MacroExpansionErrorMessage(
-        """
-        @CaseDetection can only be attached to a enum; \
-        not to \(decl.descriptiveDeclKind(withArticle: true)).
-        """
+                """
+                @CaseDetection can only be attached to a enum; \
+                not to \(decl.descriptiveDeclKind(withArticle: true)).
+                """
             )
         }
-        
+
         let configuredAccessLevel: AccessLevelModifier? = extractConfiguredAccessLevel(from: node)
-        
+
         let accessLevel = configuredAccessLevel ?? .internal
-        
+
         return decl.memberBlock.members
             .compactMap { $0.decl.as(EnumCaseDeclSyntax.self) }
             .map { $0.elements.first!.name }
             .map { ($0, $0.initialUppercased) }
             .map { original, uppercased in
-        """
-        \(raw: accessLevel) var is\(raw: uppercased): Bool {
-          if case .\(raw: original) = self {
-            return true
-          }
-        
-          return false
-        }
-        """
+                """
+                \(raw: accessLevel) var is\(raw: uppercased): Bool {
+                  if case .\(raw: original) = self {
+                    return true
+                  }
+
+                  return false
+                }
+                """
             }
     }
-    
+
     private static func extractConfiguredAccessLevel(
         from node: AttributeSyntax
     ) -> AccessLevelModifier? {
-        guard let arguments = node.arguments?.as(LabeledExprListSyntax.self)
-        else { return nil }
-        
-        // NB: Search for the first argument who's name matches an access level name
-        return arguments.compactMap { labeledExprSyntax -> AccessLevelModifier? in
-            guard
-                let identifier = labeledExprSyntax.expression.as(MemberAccessExprSyntax.self)?.declName,
-                let accessLevel = AccessLevelModifier(rawValue: identifier.baseName.trimmedDescription)
-            else { return nil }
-            
-            return accessLevel
-        }
-        .first
+        node.arguments?.as(LabeledExprListSyntax.self)?
+            .lazy
+            .compactMap { labeledExprSyntax -> AccessLevelModifier? in
+                guard
+                    let identifier = labeledExprSyntax.expression.as(MemberAccessExprSyntax.self)?.declName,
+                    let accessLevel = AccessLevelModifier(rawValue: identifier.baseName.trimmedDescription)
+                else {
+                    return nil
+                }
+
+                return accessLevel
+            }
+            .first
     }
 }
 
-
 private extension TokenSyntax {
     var initialUppercased: String {
-        let name = self.text
-        guard let initial = name.first else {
-            return name
+        guard let initial = text.first else {
+            return text
         }
-        
-        return "\(initial.uppercased())\(name.dropFirst())"
+
+        return "\(initial.uppercased())\(text.dropFirst())"
     }
 }

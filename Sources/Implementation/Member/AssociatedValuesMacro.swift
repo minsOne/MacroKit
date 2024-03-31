@@ -14,7 +14,7 @@ public struct AssociatedValuesMacro: MemberMacro {
 
         let configuredAccessLevel: AccessLevelModifier? = extractConfiguredAccessLevel(from: node)
 
-        return try enumDecl.memberBlock.members.compactMap {
+        return enumDecl.memberBlock.members.compactMap {
             $0.decl.as(EnumCaseDeclSyntax.self)?
                 .elements
                 .compactMap { $0 }
@@ -52,23 +52,19 @@ public struct AssociatedValuesMacro: MemberMacro {
     private static func extractConfiguredAccessLevel(
         from node: AttributeSyntax
     ) -> AccessLevelModifier? {
-        guard let arguments = node.arguments?.as(LabeledExprListSyntax.self)
-        else {
-            return nil
-        }
+        node.arguments?.as(LabeledExprListSyntax.self)?
+            .lazy
+            .compactMap { labeledExprSyntax -> AccessLevelModifier? in
+                guard
+                    let identifier = labeledExprSyntax.expression.as(MemberAccessExprSyntax.self)?.declName,
+                    let accessLevel = AccessLevelModifier(rawValue: identifier.baseName.trimmedDescription)
+                else {
+                    return nil
+                }
 
-        // NB: Search for the first argument who's name matches an access level name
-        return arguments.compactMap { labeledExprSyntax -> AccessLevelModifier? in
-            guard
-                let identifier = labeledExprSyntax.expression.as(MemberAccessExprSyntax.self)?.declName,
-                let accessLevel = AccessLevelModifier(rawValue: identifier.baseName.trimmedDescription)
-            else {
-                return nil
+                return accessLevel
             }
-
-            return accessLevel
-        }
-        .first
+            .first
     }
 }
 

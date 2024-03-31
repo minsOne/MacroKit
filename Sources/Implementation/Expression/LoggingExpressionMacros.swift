@@ -9,8 +9,8 @@ public struct LoggingExpressionMacros: ExpressionMacro {
         of node: some FreestandingMacroExpansionSyntax,
         in context: some MacroExpansionContext
     ) throws -> ExprSyntax {
-        let argumentList = node.argumentList
         guard
+            case let argumentList = node.arguments,
             argumentList.count == 2,
             let firstElement = argumentList.first,
             let secondElement = argumentList.last
@@ -47,17 +47,23 @@ public struct LoggingExpressionMacros: ExpressionMacro {
         """
         {
           if #available(iOS 14.0, macOS 11.0, watchOS 7.0, tvOS 14.0, *) {
-            Logger(logger).log(level: .\(oslogType), "\(msg)")
+            \(logger(oslogType: oslogType, msg: msg))
           } else {
-            \(debug(oslogType: oslogType, msg: msg))
+            \(os_log(oslogType: oslogType, msg: msg))
           }
         }()
         """
     }
 
-    private static func debug(oslogType: String, msg: String) -> String {
+    private static func os_log(oslogType: String, msg: String) -> String {
         """
         os_log(.\(oslogType), log: logger, "\(msg)")
+        """
+    }
+
+    private static func logger(oslogType: String, msg: String) -> String {
+        """
+        Logger(logger).log(level: .\(oslogType), "\(msg)")
         """
     }
 }

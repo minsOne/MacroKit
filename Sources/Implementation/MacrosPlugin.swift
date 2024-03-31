@@ -7,7 +7,6 @@ struct MacrosPlugin: CompilerPlugin {
 
     static var expressionMacros: [Macro.Type] {
         [
-            StringifyMacro.self,
             LoggingExpressionMacros.self,
         ]
     }
