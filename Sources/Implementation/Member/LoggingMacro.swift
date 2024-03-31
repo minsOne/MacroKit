@@ -31,13 +31,28 @@ public struct LoggingMacro: MemberMacro {
             throw MacroExpansionErrorMessage(msg)
         }
 
+        let category = extractCategory(from: node).map { "\"\($0)\"" } ?? "String(describing: Self.self)"
+
         return [
             DeclSyntax(
                 """
                 lazy var logger: OSLog = {
-                    LoggingMacroHelper.generateOSLog(category: String(describing: Self.self))
+                    LoggingMacroHelper.generateOSLog(category: \(raw: category))
                 }()
                 """),
         ]
+    }
+
+    private static func extractCategory(from node: AttributeSyntax) -> String? {
+        node.arguments?.as(LabeledExprListSyntax.self)?
+            .lazy
+            .compactMap { labeledExprSyntax -> String? in
+                labeledExprSyntax.expression
+                    .as(StringLiteralExprSyntax.self)?
+                    .segments.first?
+                    .as(StringSegmentSyntax.self)?
+                    .content.text
+            }
+            .first
     }
 }

@@ -49,4 +49,31 @@ final class LoggingTests: XCTestCase {
             macros: ["Logging": LoggingMacro.self]
         )
     }
+
+    func testLoggingMacroExpansion3() throws {
+        assertMacroExpansion(
+            """
+            @Logging(category: "UI")
+            struct TestingView: View {
+
+                var body: some View {
+                    Text("Hello, world!")
+                }
+            }
+            """,
+            expandedSource: """
+            struct TestingView: View {
+
+                var body: some View {
+                    Text("Hello, world!")
+                }
+
+                lazy var logger: OSLog = {
+                    LoggingMacroHelper.generateOSLog(category: "UI")
+                }()
+            }
+            """,
+            macros: ["Logging": LoggingMacro.self]
+        )
+    }
 }

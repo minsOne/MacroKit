@@ -17,7 +17,7 @@ public macro CaseDetection(_ accessLevel: CaseDetectionAccessLevelConfig? = nil)
 // MARK: - Logging
 
 @attached(member, names: named(logger))
-public macro Logging() = #externalMacro(module: "Macros", type: "LoggingMacro")
+public macro Logging(category: String? = nil) = #externalMacro(module: "Macros", type: "LoggingMacro")
 
 public enum LoggingMacroHelper {
     public static func generateOSLog(_ fileID: String = #fileID, category: String) -> OSLog {
@@ -36,6 +36,7 @@ public enum AssociatedValuesAccessLevelConfig {
     case `private`
     case `fileprivate`
     case `internal`
+    case `package`
     case `public`
 }
 

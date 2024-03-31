@@ -14,8 +14,16 @@ import Foundation
 import MacroKit
 
 func runMemberMacrosPlayground() {
-    // MARK: MemberMacros
+    runCaseDetection()
 
+    runLogging()
+
+    runAssociatedValues()
+}
+
+// MARK: MemberMacros
+
+private func runCaseDetection() {
     @CaseDetection(.fileprivate)
     enum Animal1 {
         case dog
@@ -33,9 +41,21 @@ func runMemberMacrosPlayground() {
 
     let cat = Animal2.cat(curious: true)
     print("cat is \(cat.isCat)")
+}
 
-    @Logging
+private func runLogging() {
+    @Logging()
     class LogModel {
+        func log() {
+            Logger(logger).trace("log messsage")
+            os_log(.info, log: logger, "log messsage")
+            #log(level: .info, "log messsage")
+            #log(level: .debug, "log messsage")
+            #log(level: .error, "log messsage")
+        }
+    }
+    @Logging(category: "UI")
+    class LogUIModel {
         func log() {
             Logger(logger).trace("log messsage")
             os_log(.info, log: logger, "log messsage")
@@ -46,7 +66,10 @@ func runMemberMacrosPlayground() {
     }
 
     LogModel().log()
+    LogUIModel().log()
+}
 
+private func runAssociatedValues() {
     @AssociatedValues(.fileprivate)
     enum SomeEnum {
         case none
@@ -56,6 +79,8 @@ func runMemberMacrosPlayground() {
         case closure(() -> Void)
     }
 
-    let someEnum = SomeEnum.labeledValue(a: "a", b: "b")
-    print(someEnum.labeledValue)
+    print(SomeEnum.labeledValue(a: "a", b: "b").labeledValue!)
+    print(SomeEnum.value(10).value!)
+    print(SomeEnum.optional("Hello").optional!!)
+    SomeEnum.closure({ print("Hello MacroKit World") }).closure!()
 }
