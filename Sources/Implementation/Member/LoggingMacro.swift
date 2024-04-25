@@ -37,7 +37,7 @@ public struct LoggingMacro: MemberMacro {
             DeclSyntax(
                 """
                 lazy var logger: OSLog = {
-                    LoggingMacroHelper.generateOSLog(category: \(raw: category))
+                    GenerateOSLog(category: \(raw: category)).log
                 }()
                 """),
         ]

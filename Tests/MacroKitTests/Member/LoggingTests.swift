@@ -15,7 +15,7 @@ final class LoggingTests: XCTestCase {
             class TestingObject {
 
                 lazy var logger: OSLog = {
-                    LoggingMacroHelper.generateOSLog(category: String(describing: Self.self))
+                    GenerateOSLog(category: String(describing: Self.self)).log
                 }()
             }
             """,
@@ -42,7 +42,7 @@ final class LoggingTests: XCTestCase {
                 }
 
                 lazy var logger: OSLog = {
-                    LoggingMacroHelper.generateOSLog(category: String(describing: Self.self))
+                    GenerateOSLog(category: String(describing: Self.self)).log
                 }()
             }
             """,
@@ -69,7 +69,7 @@ final class LoggingTests: XCTestCase {
                 }
 
                 lazy var logger: OSLog = {
-                    LoggingMacroHelper.generateOSLog(category: "UI")
+                    GenerateOSLog(category: "UI").log
                 }()
             }
             """,
