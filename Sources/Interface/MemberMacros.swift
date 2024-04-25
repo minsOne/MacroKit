@@ -21,12 +21,17 @@ public macro Logging(category: String? = nil) = #externalMacro(module: "Macros",
 
 public enum LoggingMacroHelper {
     public static func generateOSLog(_ fileID: String = #fileID, category: String) -> OSLog {
-        fileID
-            .components(separatedBy: "/")
-            .first
-            .map { "kr.minsone.\($0)" }
-            .flatMap { OSLog(subsystem: $0, category: category) }
-            ?? .default
+        let (module, fileName) = {
+            let list = fileID.components(separatedBy: "/")
+            return (list.first, list.last?.components(separatedBy: ".").first)
+        }()
+
+        guard let module,
+              let fileName
+        else { return .default }
+
+        let subsystem = "kr.minsone.\(module).\(fileName)"
+        return OSLog(subsystem: subsystem, category: category)
     }
 }
 
