@@ -10,4 +10,4 @@
 public macro stringify<T>(_ value: T) -> (T, String) = #externalMacro(module: "Macros", type: "StringifyMacro")
 
 @freestanding(expression)
-public macro log(level: OSLogType, _ message: String) = #externalMacro(module: "Macros", type: "LoggingExpressionMacros")
+public macro log(level: OSLogType, _ message: OSLogMessage) = #externalMacro(module: "Macros", type: "LoggingExpressionMacros")

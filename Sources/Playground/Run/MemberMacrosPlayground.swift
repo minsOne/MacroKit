@@ -44,7 +44,7 @@ private func runCaseDetection() {
 }
 
 private func runLogging() {
-    @Logging()
+    @Logging
     class LogModel {
         func log() {
             Logger(logger).trace("log messsage")
