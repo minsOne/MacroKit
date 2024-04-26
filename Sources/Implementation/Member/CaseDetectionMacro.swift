@@ -17,13 +17,14 @@ import SwiftSyntaxBuilder
 import SwiftSyntaxMacroExpansion
 import SwiftSyntaxMacros
 
-public enum CaseDetectionMacro: MemberMacro {
-    public static func expansion<D, C>(
+enum CaseDetectionMacro: MemberMacro {
+    static func expansion<D, C>(
         of node: AttributeSyntax,
         providingMembersOf decl: D,
         in context: C
     ) throws -> [SwiftSyntax.DeclSyntax]
-        where D: DeclGroupSyntax, C: MacroExpansionContext {
+        where D: DeclGroupSyntax, C: MacroExpansionContext
+    {
         guard [SwiftSyntax.SyntaxKind.enumDecl].contains(decl.kind) else {
             throw MacroExpansionErrorMessage(
                 """
@@ -44,10 +45,7 @@ public enum CaseDetectionMacro: MemberMacro {
             .map { original, uppercased in
                 """
                 \(raw: accessLevel) var is\(raw: uppercased): Bool {
-                  if case .\(raw: original) = self {
-                    return true
-                  }
-
+                  if case .\(raw: original) = self { return true }
                   return false
                 }
                 """
@@ -60,14 +58,8 @@ public enum CaseDetectionMacro: MemberMacro {
         node.arguments?.as(LabeledExprListSyntax.self)?
             .lazy
             .compactMap { labeledExprSyntax -> AccessLevelModifier? in
-                guard
-                    let identifier = labeledExprSyntax.expression.as(MemberAccessExprSyntax.self)?.declName,
-                    let accessLevel = AccessLevelModifier(rawValue: identifier.baseName.trimmedDescription)
-                else {
-                    return nil
-                }
-
-                return accessLevel
+                (labeledExprSyntax.expression.as(MemberAccessExprSyntax.self)?.declName)
+                    .flatMap { AccessLevelModifier(rawValue: $0.baseName.trimmedDescription) }
             }
             .first
     }

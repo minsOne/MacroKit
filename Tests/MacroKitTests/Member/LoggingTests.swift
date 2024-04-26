@@ -1,7 +1,8 @@
-import Macros
 import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
 import XCTest
+
+@testable import Macros
 
 final class LoggingTests: XCTestCase {
     func testLoggingMacroExpansion1() throws {

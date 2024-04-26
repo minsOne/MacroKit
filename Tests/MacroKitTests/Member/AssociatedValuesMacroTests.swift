@@ -1,7 +1,8 @@
-import Macros
 import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
 import XCTest
+
+@testable import Macros
 
 private let testMacros: [String: Macro.Type] = [
     "AssociatedValues": AssociatedValuesMacro.self,

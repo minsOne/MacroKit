@@ -9,12 +9,12 @@ import SwiftSyntaxBuilder
 import SwiftSyntaxMacroExpansion
 import SwiftSyntaxMacros
 
-public struct LoggingMacro: MemberMacro {
-    public enum MacroError: Error {
+struct LoggingMacro: MemberMacro {
+    enum MacroError: Error {
         case incorrectType
     }
 
-    public static func expansion(
+    static func expansion(
         of node: AttributeSyntax,
         providingMembersOf declaration: some DeclGroupSyntax,
         in context: some MacroExpansionContext

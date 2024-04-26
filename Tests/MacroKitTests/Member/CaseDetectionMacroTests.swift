@@ -1,7 +1,8 @@
 import SwiftSyntaxMacros
 import SwiftSyntaxMacrosTestSupport
 import XCTest
-import Macros
+
+@testable import Macros
 
 fileprivate let testMacros: [String: Macro.Type] = [
     "CaseDetection": CaseDetectionMacro.self,
@@ -26,7 +27,6 @@ final class CaseDetectionMacroTests: XCTestCase {
             if case .dog = self {
               return true
             }
-        
             return false
           }
         
@@ -34,7 +34,6 @@ final class CaseDetectionMacroTests: XCTestCase {
             if case .cat = self {
               return true
             }
-        
             return false
           }
         }
@@ -61,7 +60,6 @@ final class CaseDetectionMacroTests: XCTestCase {
             if case .dog = self {
               return true
             }
-        
             return false
           }
         
@@ -69,7 +67,6 @@ final class CaseDetectionMacroTests: XCTestCase {
             if case .cat = self {
               return true
             }
-        
             return false
           }
         }
@@ -96,7 +93,6 @@ final class CaseDetectionMacroTests: XCTestCase {
             if case .dog = self {
               return true
             }
-        
             return false
           }
         
@@ -104,7 +100,6 @@ final class CaseDetectionMacroTests: XCTestCase {
             if case .cat = self {
               return true
             }
-        
             return false
           }
         }
@@ -131,7 +126,6 @@ final class CaseDetectionMacroTests: XCTestCase {
             if case .dog = self {
               return true
             }
-        
             return false
           }
         
@@ -139,7 +133,6 @@ final class CaseDetectionMacroTests: XCTestCase {
             if case .cat = self {
               return true
             }
-        
             return false
           }
         }
@@ -166,7 +159,6 @@ final class CaseDetectionMacroTests: XCTestCase {
             if case .dog = self {
               return true
             }
-        
             return false
           }
         
@@ -174,7 +166,6 @@ final class CaseDetectionMacroTests: XCTestCase {
             if case .cat = self {
               return true
             }
-        
             return false
           }
         }
