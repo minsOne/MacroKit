@@ -1,0 +1,71 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.0 effective-5.10 (swiftlang-6.0.0.3.300 clang-1600.0.20.10)
+// swift-module-flags: -target arm64-apple-macosx10.15 -enable-objc-interop -enable-library-evolution -swift-version 5 -Onone -module-name SwiftBasicFormat
+import Swift
+import SwiftSyntax
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+open class BasicFormat : SwiftSyntax.SyntaxRewriter {
+  final public let indentationWidth: SwiftSyntax.Trivia
+  public var indentationStack: [(indentation: SwiftSyntax.Trivia, isUserDefined: Swift.Bool)]
+  public var currentIndentationLevel: SwiftSyntax.Trivia {
+    get
+  }
+  #if compiler(>=5.3) && $NoncopyableGenerics
+  public init(indentationWidth: SwiftSyntax.Trivia? = nil, initialIndentation: SwiftSyntax.Trivia = [], viewMode: SwiftSyntax.SyntaxTreeViewMode = .sourceAccurate)
+  #else
+  public init(indentationWidth: SwiftSyntax.Trivia? = nil, initialIndentation: SwiftSyntax.Trivia = [], viewMode: SwiftSyntax.SyntaxTreeViewMode = .sourceAccurate)
+  #endif
+  #if compiler(>=5.3) && $NoncopyableGenerics
+  public func increaseIndentationLevel(to userDefinedIndentation: SwiftSyntax.Trivia? = nil)
+  #else
+  public func increaseIndentationLevel(to userDefinedIndentation: SwiftSyntax.Trivia? = nil)
+  #endif
+  public func decreaseIndentationLevel()
+  override open func visit(_ node: SwiftSyntax.UnexpectedNodesSyntax) -> SwiftSyntax.UnexpectedNodesSyntax
+  override open func visitPre(_ node: SwiftSyntax.Syntax)
+  override open func visitPost(_ node: SwiftSyntax.Syntax)
+  open var inferInitialTokenIndentation: Swift.Bool {
+    get
+  }
+  open func requiresIndent(_ node: some SyntaxProtocol) -> Swift.Bool
+  #if compiler(>=5.3) && $NoncopyableGenerics
+  open func requiresNewline(between first: SwiftSyntax.TokenSyntax?, and second: SwiftSyntax.TokenSyntax?) -> Swift.Bool
+  #else
+  open func requiresNewline(between first: SwiftSyntax.TokenSyntax?, and second: SwiftSyntax.TokenSyntax?) -> Swift.Bool
+  #endif
+  #if compiler(>=5.3) && $NoncopyableGenerics
+  open func requiresWhitespace(between first: SwiftSyntax.TokenSyntax?, and second: SwiftSyntax.TokenSyntax?) -> Swift.Bool
+  #else
+  open func requiresWhitespace(between first: SwiftSyntax.TokenSyntax?, and second: SwiftSyntax.TokenSyntax?) -> Swift.Bool
+  #endif
+  open func isMutable(_ token: SwiftSyntax.TokenSyntax) -> Swift.Bool
+  #if compiler(>=5.3) && $NoncopyableGenerics
+  open func transformTokenText(_ token: SwiftSyntax.TokenSyntax) -> Swift.String?
+  #else
+  open func transformTokenText(_ token: SwiftSyntax.TokenSyntax) -> Swift.String?
+  #endif
+  #if compiler(>=5.3) && $NoncopyableGenerics
+  open func transformTokenPresence(_ token: SwiftSyntax.TokenSyntax) -> SwiftSyntax.SourcePresence?
+  #else
+  open func transformTokenPresence(_ token: SwiftSyntax.TokenSyntax) -> SwiftSyntax.SourcePresence?
+  #endif
+  override open func visit(_ token: SwiftSyntax.TokenSyntax) -> SwiftSyntax.TokenSyntax
+  @objc deinit
+}
+extension SwiftSyntax.TokenSyntax {
+  public var indentationOfLine: SwiftSyntax.Trivia {
+    get
+  }
+}
+extension SwiftSyntax.SyntaxProtocol {
+  public func formatted(using format: SwiftBasicFormat.BasicFormat = BasicFormat()) -> SwiftSyntax.Syntax
+}
+extension SwiftSyntax.Trivia {
+  #if compiler(>=5.3) && $NoncopyableGenerics
+  public func indentation(isOnNewline: Swift.Bool) -> SwiftSyntax.Trivia?
+  #else
+  public func indentation(isOnNewline: Swift.Bool) -> SwiftSyntax.Trivia?
+  #endif
+}

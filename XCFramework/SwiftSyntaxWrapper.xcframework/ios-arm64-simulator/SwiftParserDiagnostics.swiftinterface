@@ -1,6 +1,6 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.10.5 clang-1500.3.7.4)
-// swift-module-flags: -target arm64-apple-macosx10.15 -enable-objc-interop -enable-library-evolution -swift-version 5 -Onone -module-name SwiftParserDiagnostics
+// swift-compiler-version: Apple Swift version 6.0 effective-5.10 (swiftlang-6.0.0.3.300 clang-1600.0.20.10)
+// swift-module-flags: -target arm64-apple-ios13.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -enable-experimental-feature DebugDescriptionMacro -module-name SwiftParserDiagnostics
 import Swift
 import SwiftBasicFormat
 import SwiftDiagnostics
@@ -54,7 +54,11 @@ public enum StaticTokenError : Swift.String, SwiftDiagnostics.DiagnosticMessage 
   public var severity: SwiftDiagnostics.DiagnosticSeverity {
     get
   }
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public init?(rawValue: Swift.String)
+  #else
+  public init?(rawValue: Swift.String)
+  #endif
   public typealias RawValue = Swift.String
   public var rawValue: Swift.String {
     get
@@ -72,7 +76,11 @@ public enum StaticTokenWarning : Swift.String, SwiftDiagnostics.DiagnosticMessag
   public var severity: SwiftDiagnostics.DiagnosticSeverity {
     get
   }
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public init?(rawValue: Swift.String)
+  #else
+  public init?(rawValue: Swift.String)
+  #endif
   public typealias RawValue = Swift.String
   public var rawValue: Swift.String {
     get
@@ -123,8 +131,16 @@ public struct InsertTokenFixIt : SwiftParserDiagnostics.ParserFixIt {
 }
 @_hasMissingDesignatedInitializers public class ParseDiagnosticsGenerator : SwiftSyntax.SyntaxAnyVisitor {
   public static func diagnostics(for tree: some SyntaxProtocol) -> [SwiftDiagnostics.Diagnostic]
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public func exchangeTokens(unexpected: SwiftSyntax.UnexpectedNodesSyntax?, unexpectedTokenCondition: (SwiftSyntax.TokenSyntax) -> Swift.Bool, correctTokens: [SwiftSyntax.TokenSyntax?], message: (_ misplacedTokens: [SwiftSyntax.TokenSyntax]) -> some DiagnosticMessage, moveFixIt: (_ misplacedTokens: [SwiftSyntax.TokenSyntax]) -> any SwiftDiagnostics.FixItMessage, removeRedundantFixIt: (_ misplacedTokens: [SwiftSyntax.TokenSyntax]) -> (any SwiftDiagnostics.FixItMessage)? = { _ in nil })
+  #else
+  public func exchangeTokens(unexpected: SwiftSyntax.UnexpectedNodesSyntax?, unexpectedTokenCondition: (SwiftSyntax.TokenSyntax) -> Swift.Bool, correctTokens: [SwiftSyntax.TokenSyntax?], message: (_ misplacedTokens: [SwiftSyntax.TokenSyntax]) -> some DiagnosticMessage, moveFixIt: (_ misplacedTokens: [SwiftSyntax.TokenSyntax]) -> any SwiftDiagnostics.FixItMessage, removeRedundantFixIt: (_ misplacedTokens: [SwiftSyntax.TokenSyntax]) -> (any SwiftDiagnostics.FixItMessage)? = { _ in nil })
+  #endif
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public func removeToken(_ unexpected: SwiftSyntax.UnexpectedNodesSyntax?, where predicate: (SwiftSyntax.TokenSyntax) -> Swift.Bool, message: (SwiftSyntax.TokenSyntax) -> some DiagnosticMessage)
+  #else
+  public func removeToken(_ unexpected: SwiftSyntax.UnexpectedNodesSyntax?, where predicate: (SwiftSyntax.TokenSyntax) -> Swift.Bool, message: (SwiftSyntax.TokenSyntax) -> some DiagnosticMessage)
+  #endif
   override public func visitAny(_ node: SwiftSyntax.Syntax) -> SwiftSyntax.SyntaxVisitorContinueKind
   override public func visit(_ node: SwiftSyntax.UnexpectedNodesSyntax) -> SwiftSyntax.SyntaxVisitorContinueKind
   override public func visit(_ token: SwiftSyntax.TokenSyntax) -> SwiftSyntax.SyntaxVisitorContinueKind

@@ -1,3 +1,4 @@
+import SwiftSyntaxWrapper
 import SwiftDiagnostics
 import SwiftSyntax
 import SwiftSyntaxMacroExpansion

@@ -1,6 +1,6 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.10.5 clang-1500.3.7.4)
-// swift-module-flags: -target arm64-apple-macosx10.15 -enable-objc-interop -enable-library-evolution -swift-version 5 -Onone -module-name _SwiftSyntaxTestSupport
+// swift-compiler-version: Apple Swift version 6.0 effective-5.10 (swiftlang-6.0.0.3.300 clang-1600.0.20.10)
+// swift-module-flags: -target arm64-apple-ios13.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -enable-experimental-feature DebugDescriptionMacro -module-name _SwiftSyntaxTestSupport
 import Foundation
 import Swift
 import SwiftBasicFormat
@@ -11,11 +11,27 @@ import XCTest
 import _Concurrency
 import _StringProcessing
 import _SwiftConcurrencyShims
+#if compiler(>=5.3) && $NoncopyableGenerics
 public func assertStringsEqualWithDiff(_ actual: Swift.String, _ expected: Swift.String, _ message: Swift.String = "", additionalInfo: @autoclosure () -> Swift.String? = nil, file: Swift.StaticString = #file, line: Swift.UInt = #line)
+#else
+public func assertStringsEqualWithDiff(_ actual: Swift.String, _ expected: Swift.String, _ message: Swift.String = "", additionalInfo: @autoclosure () -> Swift.String? = nil, file: Swift.StaticString = #file, line: Swift.UInt = #line)
+#endif
+#if compiler(>=5.3) && $NoncopyableGenerics
 public func assertDataEqualWithDiff(_ actual: Foundation.Data, _ expected: Foundation.Data, _ message: Swift.String = "", additionalInfo: @autoclosure () -> Swift.String? = nil, file: Swift.StaticString = #file, line: Swift.UInt = #line)
+#else
+public func assertDataEqualWithDiff(_ actual: Foundation.Data, _ expected: Foundation.Data, _ message: Swift.String = "", additionalInfo: @autoclosure () -> Swift.String? = nil, file: Swift.StaticString = #file, line: Swift.UInt = #line)
+#endif
+#if compiler(>=5.3) && $NoncopyableGenerics
 public func failStringsEqualWithDiff(_ actual: Swift.String, _ expected: Swift.String, _ message: Swift.String = "", additionalInfo: @autoclosure () -> Swift.String? = nil, file: Swift.StaticString = #file, line: Swift.UInt = #line)
+#else
+public func failStringsEqualWithDiff(_ actual: Swift.String, _ expected: Swift.String, _ message: Swift.String = "", additionalInfo: @autoclosure () -> Swift.String? = nil, file: Swift.StaticString = #file, line: Swift.UInt = #line)
+#endif
 public func assertIncrementalParse(_ source: Swift.String, reusedNodes expectedReusedNodes: [_SwiftSyntaxTestSupport.ReusedNodeSpec] = [], file: Swift.StaticString = #file, line: Swift.UInt = #line)
+#if compiler(>=5.3) && $NoncopyableGenerics
 public func byteSourceRange(for substring: Swift.String, in sourceString: Swift.String, after: Swift.String.Index) -> SwiftSyntax.ByteSourceRange?
+#else
+public func byteSourceRange(for substring: Swift.String, in sourceString: Swift.String, after: Swift.String.Index) -> SwiftSyntax.ByteSourceRange?
+#endif
 public struct ReusedNodeSpec {
   public init(_ source: Swift.String, kind: SwiftSyntax.SyntaxKind, file: Swift.StaticString = #file, line: Swift.UInt = #line)
 }
@@ -30,8 +46,16 @@ public func XCTAssertNextIsNil<Iterator>(_ iterator: inout Iterator) where Itera
 public struct SubtreeMatcher {
   public init(_ markedText: Swift.String, parse: (Swift.String) throws -> SwiftSyntax.Syntax) rethrows
   public init(_ actualTree: some SyntaxProtocol, markers: [Swift.String : Swift.Int])
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public func findFirstDifference(afterMarker: Swift.String? = nil, baseline: some SyntaxProtocol, includeTrivia: Swift.Bool = false) throws -> _SwiftSyntaxTestSupport.TreeDifference?
+  #else
+  public func findFirstDifference(afterMarker: Swift.String? = nil, baseline: some SyntaxProtocol, includeTrivia: Swift.Bool = false) throws -> _SwiftSyntaxTestSupport.TreeDifference?
+  #endif
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public func assertSameStructure(afterMarker: Swift.String? = nil, _ expected: some SyntaxProtocol, includeTrivia: Swift.Bool = false, additionalInfo: Swift.String? = nil, file: Swift.StaticString = #filePath, line: Swift.UInt = #line) throws
+  #else
+  public func assertSameStructure(afterMarker: Swift.String? = nil, _ expected: some SyntaxProtocol, includeTrivia: Swift.Bool = false, additionalInfo: Swift.String? = nil, file: Swift.StaticString = #filePath, line: Swift.UInt = #line) throws
+  #endif
 }
 public enum SubtreeError : Swift.Error, Swift.CustomStringConvertible {
   case invalidMarker(name: Swift.String)
@@ -60,7 +84,11 @@ extension _SwiftSyntaxTestSupport.TreeDifference : Swift.CustomDebugStringConver
   }
 }
 extension SwiftSyntax.SyntaxProtocol {
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public func findFirstDifference(baseline: some SyntaxProtocol, includeTrivia: Swift.Bool = false) -> _SwiftSyntaxTestSupport.TreeDifference?
+  #else
+  public func findFirstDifference(baseline: some SyntaxProtocol, includeTrivia: Swift.Bool = false) -> _SwiftSyntaxTestSupport.TreeDifference?
+  #endif
 }
 extension SwiftSyntax.SyntaxProtocol {
   @available(*, deprecated, message: "For use in debugger only")

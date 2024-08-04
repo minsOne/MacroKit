@@ -1,0 +1,140 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.0 effective-5.10 (swiftlang-6.0.0.3.300 clang-1600.0.20.10)
+// swift-module-flags: -target arm64-apple-ios13.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -Onone -enable-experimental-feature DebugDescriptionMacro -module-name SwiftParser
+import Swift
+import SwiftSyntax
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+extension SwiftSyntax.AccessorDeclListSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.AccessorDeclListSyntax
+}
+extension SwiftSyntax.AttributeListSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.AttributeListSyntax
+}
+extension SwiftSyntax.CodeBlockItemListSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.CodeBlockItemListSyntax
+}
+extension SwiftSyntax.MemberBlockItemListSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.MemberBlockItemListSyntax
+}
+public typealias ReusedNodeCallback = (_ node: SwiftSyntax.Syntax) -> ()
+final public class IncrementalParseTransition {
+  #if compiler(>=5.3) && $NoncopyableGenerics
+  public init(previousTree: SwiftSyntax.SourceFileSyntax, edits: SwiftParser.ConcurrentEdits, lookaheadRanges: SwiftParser.LookaheadRanges, reusedNodeCallback: SwiftParser.ReusedNodeCallback? = nil)
+  #else
+  public init(previousTree: SwiftSyntax.SourceFileSyntax, edits: SwiftParser.ConcurrentEdits, lookaheadRanges: SwiftParser.LookaheadRanges, reusedNodeCallback: SwiftParser.ReusedNodeCallback? = nil)
+  #endif
+  @objc deinit
+}
+public struct ConcurrentEdits {
+  public let edits: [SwiftSyntax.IncrementalEdit]
+  public init(concurrent: [SwiftSyntax.IncrementalEdit]) throws
+  public init(fromSequential sequentialEdits: [SwiftSyntax.IncrementalEdit])
+  public init(_ single: SwiftSyntax.IncrementalEdit)
+  public static func _isValidConcurrentEditArray(_ edits: [SwiftSyntax.IncrementalEdit]) -> Swift.Bool
+}
+extension SwiftParser.Parser {
+  public static func parse(source: Swift.String) -> SwiftSyntax.SourceFileSyntax
+  #if compiler(>=5.3) && $NoncopyableGenerics
+  public static func parse(source: Swift.UnsafeBufferPointer<Swift.UInt8>, maximumNestingLevel: Swift.Int? = nil) -> SwiftSyntax.SourceFileSyntax
+  #else
+  public static func parse(source: Swift.UnsafeBufferPointer<Swift.UInt8>, maximumNestingLevel: Swift.Int? = nil) -> SwiftSyntax.SourceFileSyntax
+  #endif
+  #if compiler(>=5.3) && $NoncopyableGenerics
+  public static func parseIncrementally(source: Swift.String, parseTransition: SwiftParser.IncrementalParseTransition?) -> (tree: SwiftSyntax.SourceFileSyntax, lookaheadRanges: SwiftParser.LookaheadRanges)
+  #else
+  public static func parseIncrementally(source: Swift.String, parseTransition: SwiftParser.IncrementalParseTransition?) -> (tree: SwiftSyntax.SourceFileSyntax, lookaheadRanges: SwiftParser.LookaheadRanges)
+  #endif
+  #if compiler(>=5.3) && $NoncopyableGenerics
+  public static func parseIncrementally(source: Swift.UnsafeBufferPointer<Swift.UInt8>, maximumNestingLevel: Swift.Int? = nil, parseTransition: SwiftParser.IncrementalParseTransition?) -> (tree: SwiftSyntax.SourceFileSyntax, lookaheadRanges: SwiftParser.LookaheadRanges)
+  #else
+  public static func parseIncrementally(source: Swift.UnsafeBufferPointer<Swift.UInt8>, maximumNestingLevel: Swift.Int? = nil, parseTransition: SwiftParser.IncrementalParseTransition?) -> (tree: SwiftSyntax.SourceFileSyntax, lookaheadRanges: SwiftParser.LookaheadRanges)
+  #endif
+}
+public struct Parser {
+  public var lookaheadRanges: SwiftParser.LookaheadRanges {
+    get
+  }
+  #if compiler(>=5.3) && $NoncopyableGenerics
+  public init(_ input: Swift.String, maximumNestingLevel: Swift.Int? = nil, parseTransition: SwiftParser.IncrementalParseTransition? = nil)
+  #else
+  public init(_ input: Swift.String, maximumNestingLevel: Swift.Int? = nil, parseTransition: SwiftParser.IncrementalParseTransition? = nil)
+  #endif
+  #if compiler(>=5.3) && $NoncopyableGenerics
+  public init(_ input: Swift.UnsafeBufferPointer<Swift.UInt8>, maximumNestingLevel: Swift.Int? = nil, parseTransition: SwiftParser.IncrementalParseTransition? = nil, arena: SwiftSyntax.ParsingSyntaxArena? = nil)
+  #else
+  public init(_ input: Swift.UnsafeBufferPointer<Swift.UInt8>, maximumNestingLevel: Swift.Int? = nil, parseTransition: SwiftParser.IncrementalParseTransition? = nil, arena: SwiftSyntax.ParsingSyntaxArena? = nil)
+  #endif
+}
+public struct LookaheadTracker {
+  public init()
+}
+public struct LookaheadRanges {
+  public init()
+}
+extension SwiftSyntax.StringLiteralExprSyntax {
+  #if compiler(>=5.3) && $NoncopyableGenerics
+  public var representedLiteralValue: Swift.String? {
+    get
+  }
+  #else
+  public var representedLiteralValue: Swift.String? {
+    get
+  }
+  #endif
+}
+public protocol SyntaxParseable : SwiftSyntax.SyntaxProtocol {
+  static func parse(from parser: inout SwiftParser.Parser) -> Self
+}
+extension SwiftSyntax.AccessorBlockSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.AccessorBlockSyntax
+}
+extension SwiftSyntax.AccessorDeclSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.AccessorDeclSyntax
+}
+extension SwiftSyntax.AttributeSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.AttributeSyntax
+}
+extension SwiftSyntax.CatchClauseSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.CatchClauseSyntax
+}
+extension SwiftSyntax.ClosureParameterSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.ClosureParameterSyntax
+}
+extension SwiftSyntax.CodeBlockItemSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.CodeBlockItemSyntax
+}
+extension SwiftSyntax.DeclSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.DeclSyntax
+}
+extension SwiftSyntax.EnumCaseParameterSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.EnumCaseParameterSyntax
+}
+extension SwiftSyntax.ExprSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.ExprSyntax
+}
+extension SwiftSyntax.FunctionParameterSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.FunctionParameterSyntax
+}
+extension SwiftSyntax.GenericParameterClauseSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.GenericParameterClauseSyntax
+}
+extension SwiftSyntax.MemberBlockSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.MemberBlockSyntax
+}
+extension SwiftSyntax.PatternSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.PatternSyntax
+}
+extension SwiftSyntax.SourceFileSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.SourceFileSyntax
+}
+extension SwiftSyntax.StmtSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.StmtSyntax
+}
+extension SwiftSyntax.SwitchCaseSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.SwitchCaseSyntax
+}
+extension SwiftSyntax.TypeSyntax : SwiftParser.SyntaxParseable {
+  public static func parse(from parser: inout SwiftParser.Parser) -> SwiftSyntax.TypeSyntax
+}

@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.10.5 clang-1500.3.7.4)
+// swift-compiler-version: Apple Swift version 6.0 effective-5.10 (swiftlang-6.0.0.3.300 clang-1600.0.20.10)
 // swift-module-flags: -target arm64-apple-macosx10.15 -enable-objc-interop -enable-library-evolution -swift-version 5 -Onone -module-name SwiftParser
 import Swift
 import SwiftSyntax
@@ -20,7 +20,11 @@ extension SwiftSyntax.MemberBlockItemListSyntax : SwiftParser.SyntaxParseable {
 }
 public typealias ReusedNodeCallback = (_ node: SwiftSyntax.Syntax) -> ()
 final public class IncrementalParseTransition {
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public init(previousTree: SwiftSyntax.SourceFileSyntax, edits: SwiftParser.ConcurrentEdits, lookaheadRanges: SwiftParser.LookaheadRanges, reusedNodeCallback: SwiftParser.ReusedNodeCallback? = nil)
+  #else
+  public init(previousTree: SwiftSyntax.SourceFileSyntax, edits: SwiftParser.ConcurrentEdits, lookaheadRanges: SwiftParser.LookaheadRanges, reusedNodeCallback: SwiftParser.ReusedNodeCallback? = nil)
+  #endif
   @objc deinit
 }
 public struct ConcurrentEdits {
@@ -32,16 +36,36 @@ public struct ConcurrentEdits {
 }
 extension SwiftParser.Parser {
   public static func parse(source: Swift.String) -> SwiftSyntax.SourceFileSyntax
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public static func parse(source: Swift.UnsafeBufferPointer<Swift.UInt8>, maximumNestingLevel: Swift.Int? = nil) -> SwiftSyntax.SourceFileSyntax
+  #else
+  public static func parse(source: Swift.UnsafeBufferPointer<Swift.UInt8>, maximumNestingLevel: Swift.Int? = nil) -> SwiftSyntax.SourceFileSyntax
+  #endif
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public static func parseIncrementally(source: Swift.String, parseTransition: SwiftParser.IncrementalParseTransition?) -> (tree: SwiftSyntax.SourceFileSyntax, lookaheadRanges: SwiftParser.LookaheadRanges)
+  #else
+  public static func parseIncrementally(source: Swift.String, parseTransition: SwiftParser.IncrementalParseTransition?) -> (tree: SwiftSyntax.SourceFileSyntax, lookaheadRanges: SwiftParser.LookaheadRanges)
+  #endif
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public static func parseIncrementally(source: Swift.UnsafeBufferPointer<Swift.UInt8>, maximumNestingLevel: Swift.Int? = nil, parseTransition: SwiftParser.IncrementalParseTransition?) -> (tree: SwiftSyntax.SourceFileSyntax, lookaheadRanges: SwiftParser.LookaheadRanges)
+  #else
+  public static func parseIncrementally(source: Swift.UnsafeBufferPointer<Swift.UInt8>, maximumNestingLevel: Swift.Int? = nil, parseTransition: SwiftParser.IncrementalParseTransition?) -> (tree: SwiftSyntax.SourceFileSyntax, lookaheadRanges: SwiftParser.LookaheadRanges)
+  #endif
 }
 public struct Parser {
   public var lookaheadRanges: SwiftParser.LookaheadRanges {
     get
   }
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public init(_ input: Swift.String, maximumNestingLevel: Swift.Int? = nil, parseTransition: SwiftParser.IncrementalParseTransition? = nil)
+  #else
+  public init(_ input: Swift.String, maximumNestingLevel: Swift.Int? = nil, parseTransition: SwiftParser.IncrementalParseTransition? = nil)
+  #endif
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public init(_ input: Swift.UnsafeBufferPointer<Swift.UInt8>, maximumNestingLevel: Swift.Int? = nil, parseTransition: SwiftParser.IncrementalParseTransition? = nil, arena: SwiftSyntax.ParsingSyntaxArena? = nil)
+  #else
+  public init(_ input: Swift.UnsafeBufferPointer<Swift.UInt8>, maximumNestingLevel: Swift.Int? = nil, parseTransition: SwiftParser.IncrementalParseTransition? = nil, arena: SwiftSyntax.ParsingSyntaxArena? = nil)
+  #endif
 }
 public struct LookaheadTracker {
   public init()
@@ -50,9 +74,15 @@ public struct LookaheadRanges {
   public init()
 }
 extension SwiftSyntax.StringLiteralExprSyntax {
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public var representedLiteralValue: Swift.String? {
     get
   }
+  #else
+  public var representedLiteralValue: Swift.String? {
+    get
+  }
+  #endif
 }
 public protocol SyntaxParseable : SwiftSyntax.SyntaxProtocol {
   static func parse(from parser: inout SwiftParser.Parser) -> Self

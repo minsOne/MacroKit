@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.10.5 clang-1500.3.7.4)
+// swift-compiler-version: Apple Swift version 6.0 effective-5.10 (swiftlang-6.0.0.3.300 clang-1600.0.20.10)
 // swift-module-flags: -target arm64-apple-macosx10.15 -enable-objc-interop -enable-library-evolution -swift-version 5 -Onone -module-name SwiftCompilerPluginMessageHandling
 import Swift
 import SwiftBasicFormat
@@ -14,20 +14,32 @@ import _StringProcessing
 import _SwiftConcurrencyShims
 public enum PluginFeature : Swift.String {
   case loadPluginLibrary
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public init?(rawValue: Swift.String)
+  #else
+  public init?(rawValue: Swift.String)
+  #endif
   public typealias RawValue = Swift.String
   public var rawValue: Swift.String {
     get
   }
 }
 public protocol PluginProvider {
+  #if compiler(>=5.3) && $NoncopyableGenerics
   func resolveMacro(moduleName: Swift.String, typeName: Swift.String) -> (any SwiftSyntaxMacros.Macro.Type)?
+  #else
+  func resolveMacro(moduleName: Swift.String, typeName: Swift.String) -> (any SwiftSyntaxMacros.Macro.Type)?
+  #endif
   func loadPluginLibrary(libraryPath: Swift.String, moduleName: Swift.String) throws
   var features: [SwiftCompilerPluginMessageHandling.PluginFeature] { get }
 }
 public protocol MessageConnection {
   func sendMessage<TX>(_ message: TX) throws where TX : Swift.Encodable
+  #if compiler(>=5.3) && $NoncopyableGenerics
   func waitForNextMessage<RX>(_ type: RX.Type) throws -> RX? where RX : Swift.Decodable
+  #else
+  func waitForNextMessage<RX>(_ type: RX.Type) throws -> RX? where RX : Swift.Decodable
+  #endif
 }
 public class CompilerPluginMessageHandler<Connection, Provider> where Connection : SwiftCompilerPluginMessageHandling.MessageConnection, Provider : SwiftCompilerPluginMessageHandling.PluginProvider {
   public init(connection: Connection, provider: Provider)
@@ -71,7 +83,11 @@ public enum PluginMessage {
   public struct PluginCapability : Swift.Codable {
     public var protocolVersion: Swift.Int
     public var features: [Swift.String]?
+    #if compiler(>=5.3) && $NoncopyableGenerics
     public init(protocolVersion: Swift.Int, features: [Swift.String]? = nil)
+    #else
+    public init(protocolVersion: Swift.Int, features: [Swift.String]? = nil)
+    #endif
     public func encode(to encoder: any Swift.Encoder) throws
     public init(from decoder: any Swift.Decoder) throws
   }
@@ -93,7 +109,11 @@ public enum PluginMessage {
     case conformance
     case codeItem
     case `extension`
+    #if compiler(>=5.3) && $NoncopyableGenerics
     public init?(rawValue: Swift.String)
+    #else
+    public init?(rawValue: Swift.String)
+    #endif
     public typealias RawValue = Swift.String
     public var rawValue: Swift.String {
       get
@@ -115,7 +135,11 @@ public enum PluginMessage {
       case warning
       case note
       case remark
+      #if compiler(>=5.3) && $NoncopyableGenerics
       public init?(rawValue: Swift.String)
+      #else
+      public init?(rawValue: Swift.String)
+      #endif
       public typealias RawValue = Swift.String
       public var rawValue: Swift.String {
         get
@@ -178,7 +202,11 @@ public enum PluginMessage {
       case type
       case pattern
       case attribute
+      #if compiler(>=5.3) && $NoncopyableGenerics
       public init?(rawValue: Swift.String)
+      #else
+      public init?(rawValue: Swift.String)
+      #endif
       public typealias RawValue = Swift.String
       public var rawValue: Swift.String {
         get

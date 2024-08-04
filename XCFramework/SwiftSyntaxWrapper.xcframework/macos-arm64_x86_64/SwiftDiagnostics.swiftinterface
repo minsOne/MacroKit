@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.10.5 clang-1500.3.7.4)
+// swift-compiler-version: Apple Swift version 6.0 effective-5.10 (swiftlang-6.0.0.3.300 clang-1600.0.20.10)
 // swift-module-flags: -target arm64-apple-macosx10.15 -enable-objc-interop -enable-library-evolution -swift-version 5 -Onone -module-name SwiftDiagnostics
 import Swift
 import SwiftSyntax
@@ -7,7 +7,11 @@ import _Concurrency
 import _StringProcessing
 import _SwiftConcurrencyShims
 extension SwiftDiagnostics.Diagnostic {
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public init(node: some SyntaxProtocol, position: SwiftSyntax.AbsolutePosition? = nil, message: any SwiftDiagnostics.DiagnosticMessage, highlights: [SwiftSyntax.Syntax]? = nil, notes: [SwiftDiagnostics.Note] = [], fixIt: SwiftDiagnostics.FixIt)
+  #else
+  public init(node: some SyntaxProtocol, position: SwiftSyntax.AbsolutePosition? = nil, message: any SwiftDiagnostics.DiagnosticMessage, highlights: [SwiftSyntax.Syntax]? = nil, notes: [SwiftDiagnostics.Note] = [], fixIt: SwiftDiagnostics.FixIt)
+  #endif
 }
 extension SwiftDiagnostics.FixIt {
   public static func replace(message: any SwiftDiagnostics.FixItMessage, oldNode: some SyntaxProtocol, newNode: some SyntaxProtocol) -> SwiftDiagnostics.FixIt
@@ -19,7 +23,11 @@ public struct Diagnostic : Swift.CustomDebugStringConvertible {
   public let highlights: [SwiftSyntax.Syntax]
   public let notes: [SwiftDiagnostics.Note]
   public let fixIts: [SwiftDiagnostics.FixIt]
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public init(node: some SyntaxProtocol, position: SwiftSyntax.AbsolutePosition? = nil, message: any SwiftDiagnostics.DiagnosticMessage, highlights: [SwiftSyntax.Syntax]? = nil, notes: [SwiftDiagnostics.Note] = [], fixIts: [SwiftDiagnostics.FixIt] = [])
+  #else
+  public init(node: some SyntaxProtocol, position: SwiftSyntax.AbsolutePosition? = nil, message: any SwiftDiagnostics.DiagnosticMessage, highlights: [SwiftSyntax.Syntax]? = nil, notes: [SwiftDiagnostics.Note] = [], fixIts: [SwiftDiagnostics.FixIt] = [])
+  #endif
   public var message: Swift.String {
     get
   }
@@ -65,9 +73,18 @@ public struct GroupedDiagnostics {
     }
   }
   public init()
+  #if compiler(>=5.3) && $NoncopyableGenerics
   @discardableResult
   public mutating func addSourceFile(tree: SwiftSyntax.SourceFileSyntax, displayName: Swift.String, parent: (SwiftDiagnostics.GroupedDiagnostics.SourceFileID, SwiftSyntax.AbsolutePosition)? = nil, diagnostics: [SwiftDiagnostics.Diagnostic] = []) -> SwiftDiagnostics.GroupedDiagnostics.SourceFileID
+  #else
+  @discardableResult
+  public mutating func addSourceFile(tree: SwiftSyntax.SourceFileSyntax, displayName: Swift.String, parent: (SwiftDiagnostics.GroupedDiagnostics.SourceFileID, SwiftSyntax.AbsolutePosition)? = nil, diagnostics: [SwiftDiagnostics.Diagnostic] = []) -> SwiftDiagnostics.GroupedDiagnostics.SourceFileID
+  #endif
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public mutating func addDiagnostic(_ diagnostic: SwiftDiagnostics.Diagnostic, in knownSourceFileID: SwiftDiagnostics.GroupedDiagnostics.SourceFileID? = nil)
+  #else
+  public mutating func addDiagnostic(_ diagnostic: SwiftDiagnostics.Diagnostic, in knownSourceFileID: SwiftDiagnostics.GroupedDiagnostics.SourceFileID? = nil)
+  #endif
 }
 extension SwiftDiagnostics.DiagnosticsFormatter {
   public func annotateSources(in group: SwiftDiagnostics.GroupedDiagnostics) -> Swift.String
@@ -111,7 +128,11 @@ public struct Note : Swift.CustomDebugStringConvertible {
   public let node: SwiftSyntax.Syntax
   public let position: SwiftSyntax.AbsolutePosition
   public let noteMessage: any SwiftDiagnostics.NoteMessage
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public init(node: SwiftSyntax.Syntax, position: SwiftSyntax.AbsolutePosition? = nil, message: any SwiftDiagnostics.NoteMessage)
+  #else
+  public init(node: SwiftSyntax.Syntax, position: SwiftSyntax.AbsolutePosition? = nil, message: any SwiftDiagnostics.NoteMessage)
+  #endif
   public var message: Swift.String {
     get
   }

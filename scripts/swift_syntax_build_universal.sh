@@ -8,6 +8,36 @@ WRAPPER_NAME="SwiftSyntaxWrapper"
 ARCH="arm64"
 CONFIGURATION="debug"
 
+# Common modules for both platforms
+SWIFT_SYNTAX_MODULES=(
+    "SwiftBasicFormat"
+    "SwiftCompilerPlugin"
+    "SwiftCompilerPluginMessageHandling"
+    "SwiftDiagnostics"
+    "SwiftOperators"
+    "SwiftParser"
+    "SwiftParserDiagnostics"
+    "SwiftSyntax"
+    "SwiftSyntaxBuilder"
+    "SwiftSyntaxMacroExpansion"
+    "SwiftSyntaxMacros"
+    "SwiftSyntaxMacrosTestSupport"
+    "_SwiftSyntaxTestSupport"
+    "$WRAPPER_NAME"
+)
+
+# Additional modules for macOS
+MACOS_ADDITIONAL_MODULES=(
+    "SwiftIDEUtils"
+    "SwiftRefactor"
+)
+
+# Combine common and macOS-specific modules
+MACOS_MODULES=("${SWIFT_SYNTAX_MODULES[@]}" "${MACOS_ADDITIONAL_MODULES[@]}")
+
+# iOS Simulator modules (same as common modules in this case)
+IOS_SIMULATORS_MODULES=("${SWIFT_SYNTAX_MODULES[@]}")
+
 #
 # Verify input
 #
@@ -72,58 +102,68 @@ EOF
 # Build the wrapper
 #
 
-swift build --package-path $SWIFT_SYNTAX_NAME --arch $ARCH -c $CONFIGURATION -Xswiftc -enable-library-evolution -Xswiftc -emit-module-interface
+mkdir -p Outputs/macos-arm64 Outputs/macos-x86_64 Outputs/macos-arm64_x86_64 Outputs/iOS-Simulator-arm64
 
-PATH_TO_LIBRARY_ARM64="$SWIFT_SYNTAX_NAME/.build/$ARCH-apple-macosx/$CONFIGURATION/lib$WRAPPER_NAME.a"
+for ARCH in arm64 x86_64; do
+    swift build --package-path "$SWIFT_SYNTAX_NAME" --arch "$ARCH" -c "$CONFIGURATION" -Xswiftc -enable-library-evolution -Xswiftc -emit-module-interface
+    cp "$SWIFT_SYNTAX_NAME/.build/$ARCH-apple-macosx/$CONFIGURATION/lib$WRAPPER_NAME.a" "Outputs/macos-$ARCH/lib$WRAPPER_NAME.a"
+done
 
-ARCH="x86_64"
+lipo -create -output Outputs/macos-arm64_x86_64/lib$WRAPPER_NAME.a Outputs/macos-arm64/lib$WRAPPER_NAME.a Outputs/macos-x86_64/lib$WRAPPER_NAME.a
 
-swift build --package-path $SWIFT_SYNTAX_NAME --arch $ARCH -c $CONFIGURATION -Xswiftc -enable-library-evolution -Xswiftc -emit-module-interface
+for MODULE in ${MACOS_MODULES[@]}; do
+    cp "$SWIFT_SYNTAX_NAME/.build/arm64-apple-macosx/${CONFIGURATION}/${MODULE}.build/${MODULE}.swiftinterface" "Outputs/macos-arm64_x86_64"
+done
 
-PATH_TO_LIBRARY_X86_64="$SWIFT_SYNTAX_NAME/.build/$ARCH-apple-macosx/$CONFIGURATION/lib$WRAPPER_NAME.a"
+(
+    cd $SWIFT_SYNTAX_NAME && \
+    xcodebuild clean archive \
+        -scheme $WRAPPER_NAME \
+        -configuration $CONFIGURATION \
+        -destination "generic/platform=iOS Simulator" \
+        -derivedDataPath build/ios-simulator \
+        -archivePath "./XCFrameworkArchives/ios_simulators.xcarchive"  \
+        ARCHS=arm64 \
+        ONLY_ACTIVE_ARCH=NO \
+        BUILD_LIBRARY_FOR_DISTRIBUTION=YES \
+        SKIP_INSTALL=NO
+)
+
+ar -crs Outputs/iOS-Simulator-arm64/lib$WRAPPER_NAME.a $SWIFT_SYNTAX_NAME/XCFrameworkArchives/ios_simulators.xcarchive/Products/Users/minsone/Objects/*.o
+
+for MODULE in ${IOS_SIMULATORS_MODULES[@]}; do
+    PATH_TO_INTERFACE="$SWIFT_SYNTAX_NAME/build/ios-simulator/Build/Intermediates.noindex/ArchiveIntermediates/$WRAPPER_NAME/IntermediateBuildFilesPath/$SWIFT_SYNTAX_NAME.build/${CONFIGURATION}-iphonesimulator/${MODULE}.build/Objects-normal/arm64/${MODULE}.swiftinterface"
+    cp "${PATH_TO_INTERFACE}" "Outputs/iOS-Simulator-arm64"
+done
 
 #
 # Create XCFramework
 #
 
-lipo -create -output $WRAPPER_NAME.a $PATH_TO_LIBRARY_ARM64 $PATH_TO_LIBRARY_X86_64
-
 XCFRAMEWORK_NAME="$WRAPPER_NAME.xcframework"
-xcodebuild -create-xcframework -library $WRAPPER_NAME.a -output $XCFRAMEWORK_NAME
+xcodebuild -create-xcframework \
+  -library Outputs/macos-arm64_x86_64/lib$WRAPPER_NAME.a \
+  -library Outputs/iOS-Simulator-arm64/lib$WRAPPER_NAME.a \
+  -output Outputs/$XCFRAMEWORK_NAME
 
-rm $WRAPPER_NAME.a
+#
+# Copy SwiftInterface files to XCFramework
+#
 
-MODULES=(
-    "SwiftBasicFormat"
-    "SwiftCompilerPlugin"
-    "SwiftCompilerPluginMessageHandling"
-    "SwiftDiagnostics"
-    "SwiftIDEUtils"
-    "SwiftOperators"
-    "SwiftParser"
-    "SwiftParserDiagnostics"
-    "SwiftRefactor"
-    "SwiftSyntax"
-    "SwiftSyntaxBuilder"
-    "SwiftSyntaxMacroExpansion"
-    "SwiftSyntaxMacros"
-    "SwiftSyntaxMacrosTestSupport"
-    "_SwiftSyntaxTestSupport"
-    "$WRAPPER_NAME"
-)
-
-ARCHS=(
-    "x86_64"
-    "arm64"
-)
-
-for ARCH in ${ARCHS[@]}; do
-    for MODULE in ${MODULES[@]}; do
-        PATH_TO_INTERFACE="$SWIFT_SYNTAX_NAME/.build/${ARCH}-apple-macosx/${CONFIGURATION}/${MODULE}.build/${MODULE}.swiftinterface"
-        cp "${PATH_TO_INTERFACE}" "${XCFRAMEWORK_NAME}/macos-arm64_x86_64"
-    done
+for MODULE in ${MACOS_MODULES[@]}; do
+    PATH_TO_INTERFACE="Outputs/macos-arm64_x86_64/${MODULE}.swiftinterface"
+    cp "${PATH_TO_INTERFACE}" "Outputs/SwiftSyntaxWrapper.xcframework/macos-arm64_x86_64"
 done
 
-rm -rf swift-syntax
+for MODULE in ${IOS_SIMULATORS_MODULES[@]}; do
+    PATH_TO_INTERFACE="Outputs/iOS-Simulator-arm64/${MODULE}.swiftinterface"
+    cp "${PATH_TO_INTERFACE}" "Outputs/SwiftSyntaxWrapper.xcframework/ios-arm64-simulator"
+done
+
+#
+# Cleanup
+#
+
 mkdir -p XCFramework
-mv $WRAPPER_NAME.xcframework XCFramework/$WRAPPER_NAME.xcframework
+mv "Outputs/$WRAPPER_NAME.xcframework" "XCFramework/$WRAPPER_NAME.xcframework"
+rm -rf swift-syntax Outputs

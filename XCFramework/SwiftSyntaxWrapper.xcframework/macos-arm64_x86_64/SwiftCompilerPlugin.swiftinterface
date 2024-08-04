@@ -1,0 +1,24 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 6.0 effective-5.10 (swiftlang-6.0.0.3.300 clang-1600.0.20.10)
+// swift-module-flags: -target arm64-apple-macosx10.15 -enable-objc-interop -enable-library-evolution -swift-version 5 -Onone -module-name SwiftCompilerPlugin
+import Foundation
+import Swift
+import SwiftCompilerPluginMessageHandling
+import SwiftSyntaxMacros
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+public protocol CompilerPlugin {
+  init()
+  var providingMacros: [any SwiftSyntaxMacros.Macro.Type] { get }
+}
+extension SwiftCompilerPlugin.CompilerPlugin {
+  #if compiler(>=5.3) && $NoncopyableGenerics
+  public func _resolveMacro(moduleName: Swift.String, typeName: Swift.String) -> (any SwiftSyntaxMacros.Macro.Type)?
+  #else
+  public func _resolveMacro(moduleName: Swift.String, typeName: Swift.String) -> (any SwiftSyntaxMacros.Macro.Type)?
+  #endif
+}
+extension SwiftCompilerPlugin.CompilerPlugin {
+  public static func main() throws
+}

@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.10.5 clang-1500.3.7.4)
+// swift-compiler-version: Apple Swift version 6.0 effective-5.10 (swiftlang-6.0.0.3.300 clang-1600.0.20.10)
 // swift-module-flags: -target arm64-apple-macosx10.15 -enable-objc-interop -enable-library-evolution -swift-version 5 -Onone -module-name SwiftIDEUtils
 import Swift
 import SwiftSyntax
@@ -37,8 +37,16 @@ extension SwiftSyntax.SyntaxProtocol {
     get
   }
   public func classifications(in range: SwiftSyntax.ByteSourceRange) -> SwiftIDEUtils.SyntaxClassifications
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public func classification(at offset: Swift.Int) -> SwiftIDEUtils.SyntaxClassifiedRange?
+  #else
+  public func classification(at offset: Swift.Int) -> SwiftIDEUtils.SyntaxClassifiedRange?
+  #endif
+  #if compiler(>=5.3) && $NoncopyableGenerics
   public func classification(at position: SwiftSyntax.AbsolutePosition) -> SwiftIDEUtils.SyntaxClassifiedRange?
+  #else
+  public func classification(at position: SwiftSyntax.AbsolutePosition) -> SwiftIDEUtils.SyntaxClassifiedRange?
+  #endif
 }
 public enum SyntaxClassification {
   case attribute
