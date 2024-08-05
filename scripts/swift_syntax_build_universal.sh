@@ -129,7 +129,7 @@ done
         SKIP_INSTALL=NO
 )
 
-ar -crs Outputs/iOS-Simulator-arm64/lib$WRAPPER_NAME.a $SWIFT_SYNTAX_NAME/XCFrameworkArchives/ios_simulators.xcarchive/Products/Users/minsone/Objects/*.o
+ar -crs Outputs/iOS-Simulator-arm64/lib$WRAPPER_NAME.a $SWIFT_SYNTAX_NAME/XCFrameworkArchives/ios_simulators.xcarchive/Products/Users/**/Objects/*.o
 
 for MODULE in ${IOS_SIMULATORS_MODULES[@]}; do
     PATH_TO_INTERFACE="$SWIFT_SYNTAX_NAME/build/ios-simulator/Build/Intermediates.noindex/ArchiveIntermediates/$WRAPPER_NAME/IntermediateBuildFilesPath/$SWIFT_SYNTAX_NAME.build/${CONFIGURATION}-iphonesimulator/${MODULE}.build/Objects-normal/arm64/${MODULE}.swiftinterface"
